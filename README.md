@@ -1,4 +1,4 @@
-# Set-up: create a virtual environment and install dependencies
+# Set-up: Create a virtual environment and install dependencies
 ```
 python3 -m venv venv 
 source venv/bin/activate 
