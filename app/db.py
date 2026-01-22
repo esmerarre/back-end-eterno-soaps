@@ -17,10 +17,9 @@ if not DATABASE_URI:
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+# from .models.base import Base
 
-from .models.base import Base
-
-create_engine = create_engine(DATABASE_URI)
+engine = create_engine(DATABASE_URI)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():
