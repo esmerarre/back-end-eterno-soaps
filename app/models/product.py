@@ -8,9 +8,10 @@ if TYPE_CHECKING:
 
 class Product(Base):
     __tablename__ = "product"
-    
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str]
+    price: Mapped[float]
     description: Mapped[str]
+    stock: Mapped[int]
     category_id: Mapped[Optional[int]] = mapped_column(ForeignKey("category.id"))
     category: Mapped[Optional["Category"]] = relationship(back_populates="products")

@@ -7,7 +7,6 @@ if TYPE_CHECKING:
 
 class Category(Base):
     __tablename__ = "category"
-    
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str]
     description: Mapped[str]
