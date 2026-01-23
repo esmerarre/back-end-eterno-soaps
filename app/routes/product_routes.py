@@ -1,16 +1,12 @@
-# status gives us constants for HTTP status codes; HTTPException is used to create custom error responses; Request is used to handle incoming requests
-from fastapi import FastAPI
+from fastapi import APIRouter, Depends, Query, status
+from app.db import get_db
+from sqlalchemy.orm import Session
+from ..models.product import Product, ProductSchema
+from ..models.product_categories import Category
+from .route_utilities import validate_model
 
+router = APIRouter(tags=["Products"], prefix="/products")
 
-@app.get("/")  # Root endpoint
-@app.get("/products")  # Products endpoint
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/products/{product_id}")
-def get_product(product_id: int):
-    for product in products:
-        if product["id"] == product_id:
-            return product
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+@router.get("/", status_code=200, response_model=list[ProductSchema])
+def get_products(db: Session = Depends(get_db) ):
+    return db.query(Product).all()

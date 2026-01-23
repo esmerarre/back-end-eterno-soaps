@@ -1,8 +1,11 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from __future__ import annotations
+from typing import Optional, TYPE_CHECKING
+from pydantic import BaseModel
 from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
-from typing import Optional
-from typing import TYPE_CHECKING
+from .product_categories import CategorySchema
+
 if TYPE_CHECKING:
   from .product_categories import Category
 
@@ -15,3 +18,15 @@ class Product(Base):
     stock: Mapped[int]
     category_id: Mapped[Optional[int]] = mapped_column(ForeignKey("category.id"))
     category: Mapped[Optional["Category"]] = relationship(back_populates="products")
+
+class ProductSchema(BaseModel):
+    id: int
+    name: str
+    price: float
+    description: str
+    stock: int
+    category_id: Optional[int] = None
+    category: Optional[CategorySchema] = None
+
+    class Config:
+      from_attributes = True
