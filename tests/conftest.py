@@ -5,6 +5,8 @@ from fastapi.testclient import TestClient
 from app.main import app
 from app.db import get_db
 from app.models.base import Base
+from app.models.product import Product
+from app.models.product_categories import Category
 import os
 
 TEST_DATABASE_URI = os.getenv("SQLALCHEMY_TEST_DATABASE_URI")
@@ -70,3 +72,59 @@ def client(db_session: Session):
 
     # Remove overrides after test
     app.dependency_overrides.clear()
+
+
+## Sample data ##
+
+@pytest.fixture(scope='function')
+def sample_product_data(db_session: Session):
+    products: list[Product] = [
+        Product(
+            name="Eternas Caricias",
+            # ingredients=["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"],
+            price=10.0,
+            description="A soothing blend of natural herbs for gentle cleansing.",
+            stock=10
+        ),
+        Product(
+            name="Eterno de Saffron",
+            # ingredients=["Saffron", "Oats", "Tapioca", "Vitamin E", "Essential oils"],
+            price=12.0,
+            description="Luxurious saffron and oats soap for radiant skin.",
+            stock=15
+        ),
+        Product(
+            name="Serenidad Eterna",
+            # ingredients=["Lavender", "Turmeric", "Aloe Vera", "Calendula"],
+            price=11.0,
+            description="Relaxing lavender and aloe blend for sensitive skin.",
+            stock=4
+        )
+    ]
+
+    db_session.add_all(products)
+    db_session.commit()
+
+@pytest.fixture(scope='function')
+def sample_category_data(db_session: Session):
+    categories: list[Category] = [
+        Category(
+            name="Essential Oils",
+            description="Herbal infused soaps for natural care."
+        ),
+        Category(
+            name="Mosturizing",
+            description="Hydrating soaps for dry skin."
+        ),
+        Category(
+            name="Sensitive",
+            description="Gentle soaps for sensitive skin."
+        ),
+        Category(
+            name="Exfoliating",
+            description="Soaps with natural exfoliants for smooth skin."
+        )
+    ]
+
+    db_session.add_all(categories)
+    db_session.commit()

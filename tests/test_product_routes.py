@@ -1,72 +1,8 @@
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from app.models.product import Product
-from app.models.product_categories import Category
 from sqlalchemy import select
-import pytest
 
-
-## FIXTURES ##
-
-@pytest.fixture(scope='function')
-def sample_product_data(db_session: Session):
-    products: list[Product] = [
-        Product(
-            name="Eternas Caricias",
-            # ingredients=["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"],
-            price=10.0,
-            description="A soothing blend of natural herbs for gentle cleansing.",
-            stock=10
-        ),
-        Product(
-            name="Eterno de Saffron",
-            # ingredients=["Saffron", "Oats", "Tapioca", "Vitamin E", "Essential oils"],
-            price=12.0,
-            description="Luxurious saffron and oats soap for radiant skin.",
-            stock=15
-        ),
-        Product(
-            name="Serenidad Eterna",
-            # ingredients=["Lavender", "Turmeric", "Aloe Vera", "Calendula"],
-            price=11.0,
-            description="Relaxing lavender and aloe blend for sensitive skin.",
-            stock=4
-        )
-    ]
-
-    db_session.add_all(products)
-    db_session.commit()
-
-@pytest.fixture(scope='function')
-def sample_category_data(db_session: Session):
-    categories: list[Category] = [
-        Category(
-            name="Essential Oils",
-            description="Herbal infused soaps for natural care."
-        ),
-        Category(
-            name="Mosturizing",
-            description="Hydrating soaps for dry skin."
-        ),
-        Category(
-            name="Sensitive",
-            description="Gentle soaps for sensitive skin."
-        ),
-        Category(
-            name="Exfoliating",
-            description="Soaps with natural exfoliants for smooth skin."
-        )
-    ]
-
-    db_session.add_all(categories)
-    db_session.commit()
-
-
-## TESTS FOR PRODUCTS ##    
-
-
-
-#@pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_product(client: TestClient, db_session: Session):
     # Act
     response = client.post("/products", json={
@@ -303,8 +239,6 @@ def test_delete_product_invalid_id(client: TestClient, db_session: Session, samp
         "detail": "Invalid data"
     }
 
-
-
 def test_patch_product_found(client: TestClient, db_session: Session, sample_product_data):
     # Act
     response = client.patch("/products/3", json={
@@ -358,4 +292,3 @@ def test_patch_product_invalid_id(client: TestClient, db_session: Session, sampl
         "detail": "Invalid data"
     }
 
-## Category tests ##
