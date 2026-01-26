@@ -7,13 +7,10 @@ if TYPE_CHECKING:
     from .product import Product
 
 class Category(Base):
-    __tablename__ = "category"
-
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str]
+    __tablename__ = "categories"  # plural is conventional
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(index=True)  # filterable
     description: Mapped[str]
 
+    # Relationship: one category → many products
     products: Mapped[list["Product"]] = relationship(back_populates="category")
-
-
-

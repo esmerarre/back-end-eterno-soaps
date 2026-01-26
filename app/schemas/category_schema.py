@@ -1,9 +1,21 @@
 from pydantic import BaseModel
+from typing import List
 
-class CategorySchema(BaseModel):
-    id: int
+
+class CategoryBase(BaseModel):
     name: str
     description: str
 
+
+class CategoryCreate(CategoryBase):
+    pass
+
+
+class CategoryRead(CategoryBase):
+    id: int
+
     class Config:
         from_attributes = True
+
+
+

@@ -1,9 +1,7 @@
-# product.py
 from __future__ import annotations
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, JSON
 from .base import Base
-
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -12,12 +10,12 @@ if TYPE_CHECKING:
 
 class Product(Base):
     __tablename__ = "products"
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str]
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(index=True)
     description: Mapped[str]
-    category_id: Mapped[int] = mapped_column(ForeignKey("category.id"))
+    category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"), index=True)
     ingredients: Mapped[list] = mapped_column(JSON)
 
+    # Relationships
     category: Mapped["Category"] = relationship(back_populates="products")
     variants: Mapped[list["ProductVariant"]] = relationship(back_populates="product")
-

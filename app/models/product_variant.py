@@ -9,16 +9,13 @@ if TYPE_CHECKING:
 
 class ProductVariant(Base):
     __tablename__ = "product_variants"
-
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
-    size: Mapped[str]
-    shape: Mapped[str] = mapped_column(String, nullable=True)  
+    id: Mapped[int] = mapped_column(primary_key=True)
+    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), index=True)
+    size: Mapped[str] = mapped_column(index=True) 
+    shape: Mapped[str | None] = mapped_column(String, nullable=True)
     price: Mapped[float]
     stock_quantity: Mapped[int]
 
     product: Mapped["Product"] = relationship(back_populates="variants")
-
-
 
 

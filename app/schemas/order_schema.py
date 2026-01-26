@@ -1,16 +1,24 @@
 from pydantic import BaseModel
+from typing import List
 from datetime import datetime
-from .order_details_schema import OrderDetailsSchema
+from app.schemas.order_details import OrderDetailsRead
 
-class OrderSchema(BaseModel):
-    id: int
-    customer_id: int
-    amount: float
+
+class OrderBase(BaseModel):
     shipping_address: str
     order_email: str
-    order_date: datetime
+
+
+class OrderCreate(OrderBase):
+    pass
+
+
+class OrderRead(OrderBase):
+    id: int
     order_status: str
-    details: list[OrderDetailsSchema]
+    amount: float
+    order_date: datetime
+    details: List[OrderDetailsRead]
 
     class Config:
         from_attributes = True
