@@ -15,6 +15,8 @@ class Product(Base):
     name: Mapped[str]
     price: Mapped[float]
     description: Mapped[str]
+    size: Mapped[str]
+    ingredients: Mapped[list[str]]
     stock: Mapped[int]
     category_id: Mapped[Optional[int]] = mapped_column(ForeignKey("category.id"))
     category: Mapped[Optional["Category"]] = relationship(back_populates="products")
@@ -24,6 +26,8 @@ class ProductSchema(BaseModel):
     name: str
     price: float
     description: str
+    size: str
+    ingredients: list[str]
     stock: int
     category_id: Optional[int] = None
     category: Optional[CategorySchema] = None
