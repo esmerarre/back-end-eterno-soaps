@@ -20,16 +20,5 @@ class ProductVariant(Base):
     product: Mapped["Product"] = relationship(back_populates="variants")
 
 
-from pydantic import BaseModel
 
-class ProductVariantSchema(BaseModel):
-    id: int
-    product_id: int
-    size: str
-    shape: str | None  
-    price: float
-    stock_quantity: int
-
-    class Config:
-        from_attributes = True
 

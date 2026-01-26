@@ -21,15 +21,3 @@ class Product(Base):
     category: Mapped["Category"] = relationship(back_populates="products")
     variants: Mapped[list["ProductVariant"]] = relationship(back_populates="product")
 
-
-from pydantic import BaseModel
-
-class ProductSchema(BaseModel):
-    id: int
-    name: str
-    description: str
-    category_id: int
-    ingredients: list[str] 
-
-    class Config:
-        from_attributes = True
