@@ -6,7 +6,7 @@ from app.main import app
 from app.db import get_db
 from app.models.base import Base
 from app.models.product import Product
-from app.models.product_categories import Category
+from app.models.category import Category
 import os
 
 TEST_DATABASE_URI = os.getenv("SQLALCHEMY_TEST_DATABASE_URI")
@@ -77,28 +77,26 @@ def client(db_session: Session):
 ## Sample data ##
 
 @pytest.fixture(scope='function')
-def sample_product_data(db_session: Session):
+def sample_product_data(db_session: Session, sample_category_data):
+    """Creates sample products that depend on categories being present"""
     products: list[Product] = [
         Product(
-            name="Eternas Caricias",
-            # ingredients=["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"],
-            price=10.0,
+            name="Cottonwood",
             description="A soothing blend of natural herbs for gentle cleansing.",
-            stock=10
+            category_id=1,
+            ingredients=["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"]
         ),
         Product(
-            name="Eterno de Saffron",
-            # ingredients=["Saffron", "Oats", "Tapioca", "Vitamin E", "Essential oils"],
-            price=12.0,
+            name="Saffron",
             description="Luxurious saffron and oats soap for radiant skin.",
-            stock=15
+            category_id=2,
+            ingredients=["Saffron", "Oats", "Tapioca", "Vitamin E", "Essential oils"]
         ),
         Product(
-            name="Serenidad Eterna",
-            # ingredients=["Lavender", "Turmeric", "Aloe Vera", "Calendula"],
-            price=11.0,
+            name="Aloe Vera",
             description="Relaxing lavender and aloe blend for sensitive skin.",
-            stock=4
+            category_id=2,
+            ingredients=["Lavender", "Turmeric", "Aloe Vera", "Calendula"]
         )
     ]
 
@@ -109,20 +107,16 @@ def sample_product_data(db_session: Session):
 def sample_category_data(db_session: Session):
     categories: list[Category] = [
         Category(
-            name="Essential Oils",
-            description="Herbal infused soaps for natural care."
+            name="Body",
+            description="Body soaps"
         ),
         Category(
-            name="Mosturizing",
-            description="Hydrating soaps for dry skin."
+            name="Face",
+            description="Facial soaps"
         ),
         Category(
-            name="Sensitive",
-            description="Gentle soaps for sensitive skin."
-        ),
-        Category(
-            name="Exfoliating",
-            description="Soaps with natural exfoliants for smooth skin."
+            name="None",
+            description="No specific category"
         )
     ]
 
