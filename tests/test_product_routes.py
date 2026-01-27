@@ -166,10 +166,9 @@ def test_delete_product_not_found(client: TestClient, db_session: Session, sampl
 def test_delete_product_found(client: TestClient, db_session: Session, sample_product_data):
     # Act
     response = client.delete("/products/1")
-    response_body = response.json()
 
     # Assert
-    assert response.status_code == 200
+    assert response.status_code == 204
 
     query = select(Product).where(Product.id == 1)
     deleted_product = db_session.scalars(query).first()

@@ -155,10 +155,9 @@ def test_delete_category_not_found(client: TestClient, db_session: Session, samp
 def test_delete_category_found(client: TestClient, db_session: Session, sample_category_data):
     # Act
     response = client.delete("/categories/1")
-    response_body = response.json()
 
     # Assert
-    assert response.status_code == 200
+    assert response.status_code == 204
 
     query = select(Category).where(Category.id == 1)
     deleted_category = db_session.scalars(query).first()

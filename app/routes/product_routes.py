@@ -44,12 +44,12 @@ def update_product(product_id: int, updated_product: ProductCreate, db: Session 
     db.refresh(product)
     return product
 
-@router.delete("/{product_id}", response_model=ProductRead)
+@router.delete("/{product_id}", status_code=204)
 def delete_product(product_id: int, db: Session = Depends(get_db)):
     product = validate_model(db, Product, product_id)
     db.delete(product)
     db.commit()
-    return product
+    return None
 
 ##Category routes for products ##
 
