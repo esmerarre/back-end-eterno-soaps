@@ -27,10 +27,6 @@ def test_create_product_with_category(client: TestClient, db_session: Session, s
     assert new_product.name == "Cottonwood"
     assert new_product.category_id == 2
 
-# Note: This test is removed because the current architecture uses a simple foreign key
-# relationship (one product -> one category) rather than many-to-many.
-# Products are assigned to categories via the category_id field when creating/updating products.
-
 
 #@pytest.mark.skip(reason="No way to test this feature yet")
 def test_get_products_for_specific_category_no_category(client: TestClient, db_session: Session, sample_product_data):

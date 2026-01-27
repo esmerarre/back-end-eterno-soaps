@@ -11,10 +11,12 @@ router = APIRouter(tags=["Products"], prefix="/products")
 
 @router.post("/", status_code=201, response_model=ProductRead)
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
+    validate_model(db, Category, product.category_id)
     new_product = Product(
         name=product.name,
         description=product.description,
         ingredients=product.ingredients,
+        category_id=product.category_id,
     )
     db.add(new_product)
     db.commit()
@@ -31,11 +33,13 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
     return product
 
 @router.put("/{product_id}", response_model=ProductRead)
-def update_product(product_id: int, updated_product: ProductRead, db: Session = Depends(get_db)):
+def update_product(product_id: int, updated_product: ProductCreate, db: Session = Depends(get_db)):
     product = validate_model(db, Product, product_id)
+    validate_model(db, Category, updated_product.category_id)
     product.name = updated_product.name
     product.description = updated_product.description
     product.ingredients = updated_product.ingredients
+    product.category_id = updated_product.category_id
     db.commit()
     db.refresh(product)
     return product
