@@ -28,10 +28,11 @@ def test_create_product_with_category(client: TestClient, db_session: Session, s
     assert new_product.category_id == 2
 
 
+### NEEDS REVIEW - need many-to-many relationship implemented first ###
 #@pytest.mark.skip(reason="No way to test this feature yet")
 def test_get_products_for_specific_category_no_category(client: TestClient, db_session: Session, sample_product_data):
     # Act
-    response = client.get("/categories/1/products")
+    response = client.get("/categories/999/products") # Non-existent category
     response_body = response.get_json()
 
     # Assert

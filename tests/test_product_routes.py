@@ -110,7 +110,10 @@ def test_update_product_not_found(client: TestClient, db_session: Session, sampl
     response_body = response.json()
 
     # FastAPI automatically returns 422 for invalid path parameter types and specifies input type
-    assert response.status_code == 422
+    assert response.status_code == 404
+    assert response_body == {
+        "detail": "Product 999 not found"
+    }
 
 def test_update_product_found(client: TestClient, db_session: Session, sample_product_data):
     # Act
