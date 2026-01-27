@@ -1,6 +1,9 @@
 from dotenv import load_dotenv
 import os
+from sqlalchemy import create_engine #, Integer, Column, String
+from sqlalchemy.orm import sessionmaker, declarative_base
 
+# from .models.base import Base
 
 load_dotenv()
 
@@ -16,11 +19,6 @@ if not DATABASE_URI:
 # 3) create base class -- used by models #base clas was created in models/base.py
 # 4) get_db function -- used by routes to get a session
 
-
-from sqlalchemy import create_engine, Integer, Column, String
-from sqlalchemy.orm import sessionmaker, declarative_base
-
-# from .models.base import Base
 
 engine = create_engine(DATABASE_URI)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
