@@ -28,7 +28,7 @@ def get_products(db: Session = Depends(get_db)):
 @router.get("/{product_id}", response_model=ProductRead)
 def get_product(product_id: int, db: Session = Depends(get_db)):
     product = validate_model(db, Product, product_id)
-    return db.query(product).filter(Product.id==product_id).first() # .filter() returns query object, therefore need to use .first() to get the actual data
+    return product
 
 @router.put("/{product_id}", response_model=ProductRead)
 def update_product(product_id: int, updated_product: ProductRead, db: Session = Depends(get_db)):

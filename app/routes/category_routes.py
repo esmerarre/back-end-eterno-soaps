@@ -25,7 +25,7 @@ def list_categories(db: Session = Depends(get_db)):
 @router.get("/{category_id}", response_model=CategoryRead)
 def get_category(category_id: int, db: Session = Depends(get_db)):
     category = validate_model(db, Category, category_id)
-    return db.query(category).filter(Category.id==category_id).first() # .filter() returns query object, therefore need to use .first() to get the actual data
+    return category
 
 @router.put("/{category_id}/", response_model=CategoryRead)
 def update_category(category_id: int, updated_category: CategoryRead, db: Session = Depends(get_db)):
