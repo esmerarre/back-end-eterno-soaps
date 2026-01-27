@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends, Query, status
 from app.db import get_db
 from sqlalchemy.orm import Session
-from ..models.product import Product
-from ..schemas.product_schema import ProductRead,  ## needs updating
-from ..models.product_categories import Category
+from app.models.product import Product
+from app.models.category import Category
+from app.schemas.product_schema import ProductRead, ProductCreate, ProductBase
+from app.schemas.category_schema import CategoryRead, CategoryCreate, CategoryBase
 from .route_utilities import validate_model
-
-## we will have a product shchemas folder with ProductBase, ProductSchema and ProductCreateSchema
 
 router = APIRouter(tags=["Products"], prefix="/products")
 

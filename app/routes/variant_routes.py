@@ -2,14 +2,14 @@ from fastapi import APIRouter, Depends, Query, status
 from app.db import get_db
 from sqlalchemy.orm import Session
 from ..models.product import Product
-from ..schemas.product_variant_schema import ProductVariantCreate, ProductVariantRead
-from ..models.product_categories import Category
+from app.models.product_variant import ProductVariant  
+from app.schemas.product_variant_schema import ProductVariantRead, ProductVariantCreate, ProductVariantBase
 from .route_utilities import validate_model
 
 router = APIRouter(tags=["Products"], prefix="/products/{product_id}/variants")
 
-@router.post("/", response_model=ProductVariantCreateSchema)
-def create_variant(product_id: int, product_variant: ProductVariantCreateSchema, db: Session = Depends(get_db)):
+@router.post("/", response_model=ProductVariantRead)
+def create_variant(product_id: int, product_variant: ProductVariantCreate, db: Session = Depends(get_db)):
     validate_model(db, Product, product_id)
     new_variant = ProductVariant(
         product_id= product_id,
@@ -23,18 +23,18 @@ def create_variant(product_id: int, product_variant: ProductVariantCreateSchema,
     db.refresh(new_variant)
     return new_variant
 
-@router.get("/", response_model=list[ProductVariantSchema])
+@router.get("/", response_model=list[ProductVariantRead])
 def get_variants(product_id: int, db: Session = Depends(get_db)):
     return db.query(ProductVariant).filter(ProductVariant.product_id == product_id).all()
 
-@router.get("/{variant_id}", response_model=ProductVariantSchema)
+@router.get("/{variant_id}", response_model=ProductVariantRead)
 def get_variant(product_id: int, variant_id: int, db: Session = Depends(get_db)):
     validate_model(db, Product, product_id)
     variant = validate_model(db, ProductVariant, variant_id)
     return db.query(variant).filter(ProductVariant.id==variant_id).first() # .filter() returns query object, therefore need to use .first() to get the actual data
 
-@router.put("/{variant_id}", response_model=ProductVariantSchema)
-def update_variant(product_id: int, variant_id: int, updated_variant: ProductVariantSchema, db: Session = Depends(get_db)):
+@router.put("/{variant_id}", response_model=ProductVariantRead)
+def update_variant(product_id: int, variant_id: int, updated_variant: ProductVariantRead, db: Session = Depends(get_db)):
     validate_model(db, Product, product_id)
     variant = validate_model(db, ProductVariant, variant_id)
     variant.size = updated_variant.size
@@ -45,7 +45,7 @@ def update_variant(product_id: int, variant_id: int, updated_variant: ProductVar
     db.refresh(variant)
     return variant
 
-@router.delete("/{variant_id}", response_model=ProductVariantSchema)
+@router.delete("/{variant_id}", response_model=ProductVariantRead)
 def delete_variant(product_id: int, variant_id: int, db: Session = Depends(get_db)):
     validate_model(db, Product, product_id)
     variant = validate_model(db, ProductVariant, variant_id)

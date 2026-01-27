@@ -32,7 +32,9 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 from app.models.base import Base  # import your Base where models are defined
 from app.models.product import Product  # import models so they register with Base.metadata
-from app.models.product_categories import Category
+from app.models.category import Category
+from app.models.product_variant import ProductVariant
+
 
 target_metadata = Base.metadata
 
