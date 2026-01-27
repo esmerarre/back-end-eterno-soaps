@@ -47,3 +47,28 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
     db.commit()
     return product
 
+##Category routes for products ##
+
+@router.post("/{product_id}/categories", response_model=ProductSchema)
+def post_product_category(product_id: int, category_data: ProductCategoryCreateSchema, db: Session = Depends(get_db)):
+    product = validate_model(db, Product, product_id)
+    category = validate_model(db, Category, category_data.category_id)
+    product.categories.append(category) ## NEEDS REVIEW, pending updating to many-to-many relationship
+    db.commit()
+    db.refresh(product)
+    return product
+
+@router.get("/{product_id}/categories", response_model=list[CategorySchema])
+def get_product_categories(product_id: int, db: Session = Depends(get_db)):
+    product = validate_model(db, Product, product_id)
+    return product.categories  ## NEEDS REVIEW, pending updating to many-to-many relationship
+
+@router.delete("/{product_id}/categories/{category_id}", response_model=ProductSchema)
+def delete_product_category(product_id: int, category_id: int, db: Session = Depends(get_db)):
+    product = validate_model(db, Product, product_id)
+    category = validate_model(db, Category, category_id)
+    product.categories.remove(category)  ## NEEDS REVIEW, pending updating to many-to-many relationship
+    db.commit()
+    db.refresh(product)
+    return product
+
