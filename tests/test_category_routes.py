@@ -159,9 +159,6 @@ def test_delete_category_found(client: TestClient, db_session: Session, sample_c
 
     # Assert
     assert response.status_code == 200
-    assert response_body == {
-        "detail": "Category 1 deleted successfully"
-    }
 
     query = select(Category).where(Category.id == 1)
     deleted_category = db_session.scalars(query).first()

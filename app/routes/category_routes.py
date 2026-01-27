@@ -36,7 +36,7 @@ def update_category(category_id: int, updated_category: CategoryCreate, db: Sess
     db.refresh(category)
     return category
 
-@router.delete("{category_id}", response_model=CategoryRead)
+@router.delete("/{category_id}", response_model=CategoryRead)
 def delete_category(category_id: int, db: Session = Depends(get_db)):
     category = validate_model(db, Category, category_id)
     db.delete(category)
