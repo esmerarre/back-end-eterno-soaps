@@ -1,9 +1,6 @@
 from fastapi import HTTPException, status
 from sqlalchemy import select
 
-## NOT COMPLETE ##
-
-
 def validate_model(session, cls, model_id):
     try:
         model_id = int(model_id)

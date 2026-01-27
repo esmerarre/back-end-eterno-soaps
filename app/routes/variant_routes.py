@@ -3,12 +3,12 @@ from app.db import get_db
 from sqlalchemy.orm import Session
 from ..models.product import Product
 from app.models.product_variant import ProductVariant  
-from app.schemas.product_variant_schema import ProductVariantRead, ProductVariantCreate, ProductVariantBase
+from app.schemas.product_variant_schema import ProductVariantRead, ProductVariantCreate
 from .route_utilities import validate_model
 
 router = APIRouter(tags=["Products"], prefix="/products/{product_id}/variants")
 
-@router.post("/", response_model=ProductVariantRead)
+@router.post("/", status_code=201, response_model=ProductVariantRead)
 def create_variant(product_id: int, product_variant: ProductVariantCreate, db: Session = Depends(get_db)):
     validate_model(db, Product, product_id)
     new_variant = ProductVariant(
@@ -31,10 +31,10 @@ def get_variants(product_id: int, db: Session = Depends(get_db)):
 def get_variant(product_id: int, variant_id: int, db: Session = Depends(get_db)):
     validate_model(db, Product, product_id)
     variant = validate_model(db, ProductVariant, variant_id)
-    return db.query(variant).filter(ProductVariant.id==variant_id).first() # .filter() returns query object, therefore need to use .first() to get the actual data
+    return variant
 
 @router.put("/{variant_id}", response_model=ProductVariantRead)
-def update_variant(product_id: int, variant_id: int, updated_variant: ProductVariantRead, db: Session = Depends(get_db)):
+def update_variant(product_id: int, variant_id: int, updated_variant: ProductVariantCreate, db: Session = Depends(get_db)):
     validate_model(db, Product, product_id)
     variant = validate_model(db, ProductVariant, variant_id)
     variant.size = updated_variant.size
@@ -45,10 +45,10 @@ def update_variant(product_id: int, variant_id: int, updated_variant: ProductVar
     db.refresh(variant)
     return variant
 
-@router.delete("/{variant_id}", response_model=ProductVariantRead)
+@router.delete("/{variant_id}", status_code=204)
 def delete_variant(product_id: int, variant_id: int, db: Session = Depends(get_db)):
     validate_model(db, Product, product_id)
     variant = validate_model(db, ProductVariant, variant_id)
     db.delete(variant)
     db.commit()
-    return variant
+    return None

@@ -7,6 +7,7 @@ from app.db import get_db
 from app.models.base import Base
 from app.models.product import Product
 from app.models.category import Category
+from app.models.product_variant import ProductVariant
 import os
 
 TEST_DATABASE_URI = os.getenv("SQLALCHEMY_TEST_DATABASE_URI")
@@ -121,4 +122,34 @@ def sample_category_data(db_session: Session):
     ]
 
     db_session.add_all(categories)
+    db_session.commit()
+
+@pytest.fixture(scope='function')
+def sample_variant_data(db_session: Session, sample_product_data):
+    
+    variants: list[ProductVariant] = [
+        ProductVariant(
+            product_id=1,
+            size="Small",
+            shape="Round",
+            price=8.99,
+            stock_quantity=100
+        ),
+        ProductVariant(
+            product_id=1,
+            size="Large",
+            shape="Round",
+            price=12.99,
+            stock_quantity=50
+        ),
+        ProductVariant(
+            product_id=2,
+            size="Medium",
+            shape="Square",
+            price=10.99,
+            stock_quantity=75
+        )
+    ]
+
+    db_session.add_all(variants)
     db_session.commit()

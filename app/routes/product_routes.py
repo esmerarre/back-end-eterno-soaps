@@ -3,8 +3,8 @@ from app.db import get_db
 from sqlalchemy.orm import Session
 from app.models.product import Product
 from app.models.category import Category
-from app.schemas.product_schema import ProductRead, ProductCreate, ProductBase
-from app.schemas.category_schema import CategoryRead, CategoryCreate, CategoryBase
+from app.schemas.product_schema import ProductRead, ProductCreate
+from app.schemas.category_schema import CategoryRead, CategoryCreate
 from .route_utilities import validate_model
 
 router = APIRouter(tags=["Products"], prefix="/products")
@@ -75,4 +75,3 @@ def delete_product_category(product_id: int, category_id: int, db: Session = Dep
     db.commit()
     db.refresh(product)
     return product
-
