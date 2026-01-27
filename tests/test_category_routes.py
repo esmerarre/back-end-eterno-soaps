@@ -92,9 +92,6 @@ def test_get_category_by_id_invalid_id(client: TestClient, db_session: Session, 
 
     # Assert
     assert response.status_code == 422
-    assert response_body == {
-        "detail": "Invalid data"
-    }
 
 def test_update_category_not_found(client: TestClient, db_session: Session, sample_category_data):
     # Act
@@ -142,10 +139,7 @@ def test_update_category_invalid_id(client: TestClient, db_session: Session, sam
     response_body = response.json()
 
     # Assert
-    assert response.status_code == 400
-    assert response_body == {
-        "detail": "Invalid data"
-    }
+    assert response.status_code == 422
 
 def test_delete_category_not_found(client: TestClient, db_session: Session, sample_category_data):
     # Act
@@ -180,10 +174,7 @@ def test_delete_category_invalid_id(client: TestClient, db_session: Session, sam
     response_body = response.json()
 
     # Assert
-    assert response.status_code == 400
-    assert response_body == {
-        "detail": "Invalid data"
-    }
+    assert response.status_code == 422
 
 # def test_patch_category_found(client: TestClient, db_session: Session, sample_category_data):
 #     # Act

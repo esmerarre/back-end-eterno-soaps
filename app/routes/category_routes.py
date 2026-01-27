@@ -27,8 +27,8 @@ def get_category(category_id: int, db: Session = Depends(get_db)):
     category = validate_model(db, Category, category_id)
     return category
 
-@router.put("/{category_id}/", response_model=CategoryRead)
-def update_category(category_id: int, updated_category: CategoryRead, db: Session = Depends(get_db)):
+@router.put("/{category_id}", response_model=CategoryRead)
+def update_category(category_id: int, updated_category: CategoryCreate, db: Session = Depends(get_db)):
     category = validate_model(db, Category, category_id)
     category.name = updated_category.name
     category.description = updated_category.description
@@ -36,7 +36,7 @@ def update_category(category_id: int, updated_category: CategoryRead, db: Sessio
     db.refresh(category)
     return category
 
-@router.delete("/{category_id}/", response_model=CategoryRead)
+@router.delete("{category_id}", response_model=CategoryRead)
 def delete_category(category_id: int, db: Session = Depends(get_db)):
     category = validate_model(db, Category, category_id)
     db.delete(category)
