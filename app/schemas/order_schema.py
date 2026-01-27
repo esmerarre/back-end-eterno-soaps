@@ -1,7 +1,8 @@
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime
-from app.schemas.order_details import OrderDetailsRead
+from app.schemas.order_details_schema import OrderDetailsRead
+
 
 
 class OrderBase(BaseModel):

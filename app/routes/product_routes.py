@@ -1,12 +1,21 @@
 from fastapi import APIRouter, Depends, Query, status
 from app.db import get_db
 from sqlalchemy.orm import Session
-from ..models.product import Product, ProductSchema
-from ..models.product_categories import Category
+
+# Models = database tables
+from app.models.product import Product
+from app.models.product_variant import ProductVariant  
+
+# Schemas = request/response models
+from app.schemas.product_schema import ProductRead, ProductCreate, ProductBase
+from app.schemas.product_variant_schema import ProductVariantRead, ProductVariantCreate, ProductVariantBase
+
 from .route_utilities import validate_model
 
-router = APIRouter(tags=["Products"], prefix="/products")
 
-@router.get("/", status_code=200, response_model=list[ProductSchema])
-def get_products(db: Session = Depends(get_db) ):
-    return db.query(Product).all()
+router = APIRouter(prefix="/products", tags=["Products"])
+
+@router.get("/")
+def get_all_products(db: Session = Depends(get_db)):
+    products = db.query(Product).all()  # query all products
+    return products

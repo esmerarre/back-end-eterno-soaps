@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import List
-from app.schemas.product_variant import ProductVariantRead
+from app.schemas.product_variant_schema import ProductVariantRead
 
 
 
