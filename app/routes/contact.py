@@ -22,20 +22,26 @@
 #         print("Email error:", e)  # ✅ print the exact exception
 #         raise HTTPException(status_code=500, detail=str(e))
 
-from fastapi import APIRouter, HTTPException
-from app.schemas.contact_schema import ContactForm
-from app.services.gmail import log_contact_message
+# backend/app/routes/contact.py
+from fastapi import APIRouter, Request
+from pydantic import BaseModel
+from datetime import datetime
 
-router = APIRouter(prefix="/contact", tags=["Contact"])
+router = APIRouter()
 
-@router.post("/")
-def submit_contact(form: ContactForm):
-    try:
-        log_contact_message(
-            name=form.name,
-            email=form.email,
-            message=form.message,
-        )
-        return {"status": "received"}
-    except Exception:
-        raise HTTPException(status_code=500, detail="Failed to process contact form")
+class ContactForm(BaseModel):
+    name: str
+    email: str
+    message: str
+
+@router.post("/contact")
+async def submit_contact(form: ContactForm):
+    print("\n📨 NEW CONTACT FORM SUBMISSION")
+    print("-" * 32)
+    print(f"Time: {datetime.now()}")
+    print(f"Name: {form.name}")
+    print(f"Email: {form.email}")
+    print("Message:")
+    print(form.message)
+    print("-" * 32)
+    return {"message": "Form received!"}
