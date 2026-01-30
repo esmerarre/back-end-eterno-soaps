@@ -2,6 +2,7 @@ from __future__ import annotations
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, JSON
 from .category import Category
+from .product_categories import association_table
 from .base import Base
 from typing import TYPE_CHECKING
 
@@ -18,5 +19,5 @@ class Product(Base):
     ingredients: Mapped[list] = mapped_column(JSON)
 
     # Relationships
-    category: Mapped["Category"] = relationship(back_populates="products")
+    category: Mapped[list["Category"]] = relationship(secondary=association_table, back_populates="products")
     variants: Mapped[list["ProductVariant"]] = relationship(back_populates="product")

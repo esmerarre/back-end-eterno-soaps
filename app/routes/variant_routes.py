@@ -15,6 +15,7 @@ def create_variant(product_id: int, product_variant: ProductVariantCreate, db: S
         product_id= product_id,
         size=product_variant.size,
         shape=product_variant.shape,
+        image_url = product_variant.img_url,
         price=product_variant.price,
         stock_quantity=product_variant.stock_quantity
     )
@@ -39,6 +40,7 @@ def update_variant(product_id: int, variant_id: int, updated_variant: ProductVar
     variant = validate_model(db, ProductVariant, variant_id)
     variant.size = updated_variant.size
     variant.shape = updated_variant.shape
+    variant.img_url = updated_variant.img_url
     variant.price = updated_variant.price
     variant.stock_quantity = updated_variant.stock_quantity
     db.commit()

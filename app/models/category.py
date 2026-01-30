@@ -1,6 +1,7 @@
 from __future__ import annotations
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
+from .product_categories import association_table
 
 from typing import TYPE_CHECKING
 
@@ -14,4 +15,4 @@ class Category(Base):
     description: Mapped[str]
 
     # Relationship: one category → many products
-    products: Mapped[list["Product"]] = relationship(back_populates="category")
+    products: Mapped[list["Product"]] = relationship(secondary=association_table, back_populates="category")
