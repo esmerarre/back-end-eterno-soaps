@@ -4,19 +4,16 @@ from app.db import get_db
 from app.models.category import Category
 from app.schemas.category_schema import CategoryRead, CategoryCreate
 from .route_utilities import validate_model
+from typing import List
 
 router = APIRouter(tags=["Categories"], prefix="/categories")
 
-@router.post("/", response_model=CategoryRead, status_code=201)
-def create_category(category: CategoryCreate, db: Session = Depends(get_db)):
-    new_category = Category(
-        name=category.name,
-        description=category.description
-    )
-    db.add(new_category)
+@router.post("/", response_model=List[CategoryRead], status_code=201)
+def create_category(categories: list[CategoryCreate], db: Session = Depends(get_db)):
+    db_new_categories = [Category(**category.model_dump()) for category in categories]
+    db.add_all(db_new_categories)
     db.commit()
-    db.refresh(new_category)
-    return new_category
+    return db_new_categories
 
 @router.get("/", response_model=list[CategoryRead])
 def list_categories(db: Session = Depends(get_db)):
