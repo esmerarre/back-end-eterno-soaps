@@ -1,8 +1,8 @@
-"""add product variants, orders, order_details
+"""generate migrations for all models
 
-Revision ID: 5e76d122cca0
-Revises: d6a1a19a4437
-Create Date: 2026-01-26 15:33:57.629297
+Revision ID: cd21c388f6f1
+Revises: 
+Create Date: 2026-01-27 14:02:35.445001
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '5e76d122cca0'
-down_revision: Union[str, Sequence[str], None] = 'd6a1a19a4437'
+revision: str = 'cd21c388f6f1'
+down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
