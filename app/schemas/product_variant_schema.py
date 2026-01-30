@@ -5,6 +5,7 @@ from typing import Optional
 class ProductVariantBase(BaseModel):
     size: str
     shape: Optional[str]
+    img_url: Optional[str]
     price: float
     stock_quantity: int
 
