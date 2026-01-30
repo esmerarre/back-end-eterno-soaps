@@ -19,5 +19,5 @@ class Product(Base):
     ingredients: Mapped[list] = mapped_column(JSON)
 
     # Relationships
-    category: Mapped[list["Category"]] = relationship(secondary=association_table, back_populates="products")
+    categories: Mapped[list["Category"]] = relationship(secondary=association_table, back_populates="products")
     variants: Mapped[list["ProductVariant"]] = relationship(back_populates="product")
