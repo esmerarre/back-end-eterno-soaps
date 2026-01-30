@@ -15,7 +15,7 @@ def create_variant(product_id: int, product_variant: ProductVariantCreate, db: S
         product_id= product_id,
         size=product_variant.size,
         shape=product_variant.shape,
-        image_url = product_variant.img_url,
+        img_url = product_variant.img_url,
         price=product_variant.price,
         stock_quantity=product_variant.stock_quantity
     )

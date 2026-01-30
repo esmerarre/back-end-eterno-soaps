@@ -132,6 +132,7 @@ def sample_variant_data(db_session: Session, sample_product_data):
             product_id=1,
             size="Small",
             shape="Round",
+            img_url="https://example.com/images/cottonwood-small.jpg",
             price=8.99,
             stock_quantity=100
         ),
@@ -139,6 +140,7 @@ def sample_variant_data(db_session: Session, sample_product_data):
             product_id=1,
             size="Large",
             shape="Round",
+            img_url="https://example.com/images/cottonwood-large.jpg",
             price=12.99,
             stock_quantity=50
         ),
@@ -146,6 +148,7 @@ def sample_variant_data(db_session: Session, sample_product_data):
             product_id=2,
             size="Medium",
             shape="Square",
+            img_url="https://example.com/images/saffron-medium.jpg",
             price=10.99,
             stock_quantity=75
         )
