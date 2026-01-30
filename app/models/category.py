@@ -15,4 +15,4 @@ class Category(Base):
     description: Mapped[str]
 
     # Relationship: one category → many products
-    products: Mapped[list["Product"]] = relationship(secondary=association_table, back_populates="category")
+    products: Mapped[list["Product"]] = relationship(secondary=association_table, back_populates="categories")
