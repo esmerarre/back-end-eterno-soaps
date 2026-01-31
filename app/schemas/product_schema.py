@@ -6,7 +6,6 @@ class ProductBase(BaseModel):
     name: str
     description: str
     ingredients: List[str]
-    category_id: int
 
 class ProductCreate(ProductBase):
     pass

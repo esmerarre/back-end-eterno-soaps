@@ -8,7 +8,6 @@ def test_create_product(client: TestClient, db_session: Session, sample_category
     response = client.post("/products", json={
         "name": "Cottonwood",
         "description": "A soothing blend of natural herbs for gentle cleansing.",
-        "category_id": 1,
         "ingredients": ["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"]
     })
     response_body = response.json()
@@ -18,7 +17,6 @@ def test_create_product(client: TestClient, db_session: Session, sample_category
     assert response_body["id"] == 1
     assert response_body["name"] == "Cottonwood"
     assert response_body["description"] == "A soothing blend of natural herbs for gentle cleansing."
-    assert response_body["category_id"] == 1
     assert response_body["ingredients"] == ["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"]
     
     query = select(Product).where(Product.id == 1)
@@ -33,7 +31,6 @@ def test_create_product_invalid_data(client: TestClient, db_session: Session, sa
     response = client.post("/products", json={
         "name": "",
         "description": "",
-        "category_id": 999,  # Non-existent category
         "ingredients": []
     })
     response_body = response.json()
@@ -59,12 +56,10 @@ def test_get_all_products(client: TestClient, db_session: Session, sample_produc
     
     # Check first product
     assert response_body[0]["name"] == "Cottonwood"
-    assert response_body[0]["category_id"] == 1
     assert "ingredients" in response_body[0]
     
     # Check second product
     assert response_body[1]["name"] == "Saffron"
-    assert response_body[1]["category_id"] == 2
 
 def test_get_product_by_id_not_found(client: TestClient, db_session: Session, sample_product_data):
     # Act
@@ -87,7 +82,6 @@ def test_get_product_by_id_found(client: TestClient, db_session: Session, sample
     assert response_body["id"] == 2
     assert response_body["name"] == "Saffron"
     assert response_body["description"] == "Luxurious saffron and oats soap for radiant skin."
-    assert response_body["category_id"] == 2
     assert "ingredients" in response_body
 
 def test_get_product_by_id_invalid_id(client: TestClient, db_session: Session, sample_product_data):
@@ -104,7 +98,6 @@ def test_update_product_not_found(client: TestClient, db_session: Session, sampl
     response = client.put("/products/999", json={
         "name": "Updated Name",
         "description": "Updated Description",
-        "category_id": 1,
         "ingredients": ["Test"]
     })
     response_body = response.json()
@@ -120,7 +113,6 @@ def test_update_product_found(client: TestClient, db_session: Session, sample_pr
     response = client.put("/products/2", json={
         "name": "Updated Saffron",
         "description": "Updated Description",
-        "category_id": 1,
         "ingredients": ["Updated", "Ingredients"]
     })
     response_body = response.json()
@@ -130,7 +122,6 @@ def test_update_product_found(client: TestClient, db_session: Session, sample_pr
     assert response_body["id"] == 2
     assert response_body["name"] == "Updated Saffron"
     assert response_body["description"] == "Updated Description"
-    assert response_body["category_id"] == 1
 
     query = select(Product).where(Product.id == 2)
     updated_product = db_session.scalars(query).first()
@@ -144,7 +135,6 @@ def test_update_product_invalid_id(client: TestClient, db_session: Session, samp
     response = client.put("/products/abc", json={
         "name": "Updated Name",
         "description": "Updated Description",
-        "category_id": 1,
         "ingredients": ["Test"]
     })
     response_body = response.json()

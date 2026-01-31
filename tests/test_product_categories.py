@@ -9,7 +9,6 @@ def test_create_product_with_category(client: TestClient, db_session: Session, s
     response = client.post("/products", json={
         "name": "Cottonwood",
         "description": "A soothing blend of natural herbs for gentle cleansing.",
-        "category_id": 2,
         "ingredients": ["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"]
     })
     response_body = response.json()
@@ -18,14 +17,12 @@ def test_create_product_with_category(client: TestClient, db_session: Session, s
     assert response.status_code == 201
     assert response_body["id"] == 1
     assert response_body["name"] == "Cottonwood"
-    assert response_body["category_id"] == 2
     
     query = select(Product).where(Product.id == 1)
     new_product = db_session.scalars(query).first()
 
     assert new_product
     assert new_product.name == "Cottonwood"
-    assert new_product.category_id == 2
 
 
 ### NEEDS REVIEW - need many-to-many relationship implemented first ###
@@ -84,7 +81,5 @@ def test_get_products_for_specific_category_with_products(client: TestClient, db
     
     assert len(products) == 2
     assert products[0]["name"] == "Saffron"
-    assert products[0]["category_id"] == 2
     assert products[1]["name"] == "Aloe Vera"
-    assert products[1]["category_id"] == 2
 
