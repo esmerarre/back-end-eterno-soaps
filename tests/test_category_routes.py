@@ -6,10 +6,12 @@ import pytest
 
 ## Category tests ##
 
+## TEST FOR CREATE NOT WORKING SINCE ROUTE WAS UPDATED TO TAKE IN LIST/WORKS IN POSTMAN
+
 def test_create_category(client: TestClient, db_session: Session):
     # Act
     response = client.post("/categories", json={
-        "name": "Body",
+        "category_ids": "Body",
         "description": "Body soaps"
     })
     response_body = response.json()

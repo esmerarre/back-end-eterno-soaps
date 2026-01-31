@@ -3,7 +3,7 @@ from app.db import get_db
 from sqlalchemy.orm import Session
 from app.models.product import Product
 from app.models.category import Category
-from app.schemas.product_schema import ProductRead, ProductCreate
+from app.schemas.product_schema import ProductRead, ProductCreate, ProductCategoryAssign, ProductCategoryAssignResponse
 from app.schemas.category_schema import CategoryRead, CategoryCreate
 from .route_utilities import validate_model
 
@@ -53,14 +53,18 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
 
 ##Category routes for products ##
 
-@router.post("/{product_id}/categories", response_model=ProductRead) ## check CategoryCreate, assuming that category create will be format of category data.
-def post_product_category(product_id: int, category_data: CategoryCreate, db: Session = Depends(get_db)):
+@router.post("/{product_id}/categories", response_model=ProductCategoryAssignResponse) ## check CategoryCreate, assuming that category create will be format of category data.
+def post_product_category(product_id: int, category_data: ProductCategoryAssign, db: Session = Depends(get_db)):
     product = validate_model(db, Product, product_id)
-    category = validate_model(db, Category, category_data.category_id)
-    product.categories.append(category) ## NEEDS REVIEW, pending updating to many-to-many relationship
+    categories = db.query(Category).filter(Category.id.in_(category_data.category_ids)).all()
+    for category in categories:
+        product.categories.append(category) ## NEEDS REVIEW, pending updating to many-to-many relationship
     db.commit()
     db.refresh(product)
-    return product
+    return {
+            "product_id": product.id,
+            "added_categories": [c.name for c in categories]
+        }
 
 @router.get("/{product_id}/categories", response_model=list[CategoryRead])
 def get_product_categories(product_id: int, db: Session = Depends(get_db)):
