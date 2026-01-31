@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import List
 from app.schemas.product_variant_schema import ProductVariantRead
+from app.schemas.category_schema import CategoryRead
 
 class ProductBase(BaseModel):
     name: str
@@ -13,6 +14,7 @@ class ProductCreate(ProductBase):
 class ProductRead(ProductBase):
     id: int
     variants: List[ProductVariantRead] = []
+    categories: List[CategoryRead] = []
 
     class Config:
         from_attributes = True
