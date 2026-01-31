@@ -5,8 +5,32 @@ from ..models.product import Product
 from app.models.product_variant import ProductVariant  
 from app.schemas.product_variant_schema import ProductVariantRead, ProductVariantCreate
 from .route_utilities import validate_model
+from pydantic import BaseModel
+from fastapi import HTTPException
+
 
 router = APIRouter(tags=["Products"], prefix="/products/{product_id}/variants")
+
+
+class StockUpdate(BaseModel):
+    quantity: int  # quantity purchased
+
+@router.patch("/{variant_id}/stock", response_model=ProductVariantRead)
+def decrease_variant_stock(
+    product_id: int,
+    variant_id: int,
+    stock_update: StockUpdate,
+    db: Session = Depends(get_db),
+):
+    variant = validate_model(db, ProductVariant, variant_id)
+
+    if variant.stock_quantity < stock_update.quantity:
+        raise HTTPException(status_code=400, detail="Not enough stock")
+
+    variant.stock_quantity -= stock_update.quantity
+    db.commit()
+    db.refresh(variant)
+    return variant
 
 @router.post("/", status_code=201, response_model=ProductVariantRead)
 def create_variant(product_id: int, product_variant: ProductVariantCreate, db: Session = Depends(get_db)):
