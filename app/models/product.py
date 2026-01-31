@@ -15,7 +15,6 @@ class Product(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(index=True)
     description: Mapped[str]
-    category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"), index=True)
     ingredients: Mapped[list] = mapped_column(JSON)
 
     # Relationships

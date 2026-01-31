@@ -84,19 +84,16 @@ def sample_product_data(db_session: Session, sample_category_data):
         Product(
             name="Cottonwood",
             description="A soothing blend of natural herbs for gentle cleansing.",
-            category_id=1,
             ingredients=["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"]
         ),
         Product(
             name="Saffron",
             description="Luxurious saffron and oats soap for radiant skin.",
-            category_id=2,
             ingredients=["Saffron", "Oats", "Tapioca", "Vitamin E", "Essential oils"]
         ),
         Product(
             name="Aloe Vera",
             description="Relaxing lavender and aloe blend for sensitive skin.",
-            category_id=2,
             ingredients=["Lavender", "Turmeric", "Aloe Vera", "Calendula"]
         )
     ]
@@ -132,6 +129,7 @@ def sample_variant_data(db_session: Session, sample_product_data):
             product_id=1,
             size="Small",
             shape="Round",
+            img_url="https://example.com/images/cottonwood-small.jpg",
             price=8.99,
             stock_quantity=100
         ),
@@ -139,6 +137,7 @@ def sample_variant_data(db_session: Session, sample_product_data):
             product_id=1,
             size="Large",
             shape="Round",
+            img_url="https://example.com/images/cottonwood-large.jpg",
             price=12.99,
             stock_quantity=50
         ),
@@ -146,6 +145,7 @@ def sample_variant_data(db_session: Session, sample_product_data):
             product_id=2,
             size="Medium",
             shape="Square",
+            img_url="https://example.com/images/saffron-medium.jpg",
             price=10.99,
             stock_quantity=75
         )

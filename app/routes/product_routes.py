@@ -3,7 +3,8 @@ from app.db import get_db
 from sqlalchemy.orm import Session
 from app.models.product import Product
 from app.models.category import Category
-from app.schemas.product_schema import ProductRead, ProductCreate
+from app.models.product_categories import association_table
+from app.schemas.product_schema import ProductRead, ProductCreate, ProductCategoryAssign, ProductCategoryAssignResponse
 from app.schemas.category_schema import CategoryRead, CategoryCreate
 from .route_utilities import validate_model
 
@@ -11,12 +12,10 @@ router = APIRouter(tags=["Products"], prefix="/products")
 
 @router.post("/", status_code=201, response_model=ProductRead)
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
-    validate_model(db, Category, product.category_id)
     new_product = Product(
         name=product.name,
         description=product.description,
         ingredients=product.ingredients,
-        category_id=product.category_id,
     )
     db.add(new_product)
     db.commit()
@@ -35,11 +34,9 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
 @router.put("/{product_id}", response_model=ProductRead)
 def update_product(product_id: int, updated_product: ProductCreate, db: Session = Depends(get_db)):
     product = validate_model(db, Product, product_id)
-    validate_model(db, Category, updated_product.category_id)
     product.name = updated_product.name
     product.description = updated_product.description
     product.ingredients = updated_product.ingredients
-    product.category_id = updated_product.category_id
     db.commit()
     db.refresh(product)
     return product
@@ -53,25 +50,29 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
 
 ##Category routes for products ##
 
-@router.post("/{product_id}/categories", response_model=ProductRead) ## check CategoryCreate, assuming that category create will be format of category data.
-def post_product_category(product_id: int, category_data: CategoryCreate, db: Session = Depends(get_db)):
+@router.post("/{product_id}/categories", response_model=ProductCategoryAssignResponse)
+def post_product_category(product_id: int, category_data: ProductCategoryAssign, db: Session = Depends(get_db)):
     product = validate_model(db, Product, product_id)
-    category = validate_model(db, Category, category_data.category_id)
-    product.categories.append(category) ## NEEDS REVIEW, pending updating to many-to-many relationship
+    categories = db.query(Category).filter(Category.id.in_(category_data.category_ids)).all()
+    for category in categories:
+        product.categories.append(category) 
     db.commit()
     db.refresh(product)
-    return product
+    return {
+            "product_id": product.id,
+            "added_categories": [c.name for c in categories]
+        }
 
 @router.get("/{product_id}/categories", response_model=list[CategoryRead])
 def get_product_categories(product_id: int, db: Session = Depends(get_db)):
     product = validate_model(db, Product, product_id)
-    return product.categories  ## NEEDS REVIEW, pending updating to many-to-many relationship
+    return product.categories  
 
 @router.delete("/{product_id}/categories/{category_id}", response_model=ProductRead)
 def delete_product_category(product_id: int, category_id: int, db: Session = Depends(get_db)):
     product = validate_model(db, Product, product_id)
-    category = validate_model(db, Category, category_id)
-    product.categories.remove(category)  ## NEEDS REVIEW, pending updating to many-to-many relationship
+    category = validate_model(db, Category, category_id) ## this will validate if category exists, but not if it's associated with product
+    product.categories.remove(category)  
     db.commit()
     db.refresh(product)
     return product
