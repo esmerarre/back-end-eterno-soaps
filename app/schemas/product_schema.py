@@ -31,6 +31,7 @@ class ProductSummary(BaseModel):  # No category reference
     name: str
     description: str
     ingredients: List[str]
+    variants: List[ProductVariantRead] = []
 
     class Config:
         from_attributes = True
