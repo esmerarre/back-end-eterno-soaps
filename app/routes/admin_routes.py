@@ -6,6 +6,18 @@ from app.schemas.admin_schema import AdminCreate, AdminOut
 
 router = APIRouter(prefix="/admins", tags=["admins"])
 
+@router.get("/", response_model=list[AdminOut])
+def get_all_admins(db: Session = Depends(get_db)):
+    return db.query(Admin).all()
+
+@router.get("/{username}", response_model=AdminOut)
+def get_admin(username: str, db: Session = Depends(get_db)):
+    admin = db.query(Admin).filter(Admin.username == username).first()
+    if not admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+    return admin
+
+
 @router.post("/login", response_model=AdminOut)
 def admin_login(admin: AdminCreate, db: Session = Depends(get_db)):
     # Very simple login for now: just check username exists
@@ -21,3 +33,5 @@ def create_admin(admin: AdminCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_admin)
     return new_admin
+
+
