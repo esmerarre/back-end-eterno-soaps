@@ -11,7 +11,7 @@ class ProductVariantBase(BaseModel):
 
 
 class ProductVariantCreate(ProductVariantBase):
-    product_id: int
+    pass
 
 
 class ProductVariantRead(ProductVariantBase):
