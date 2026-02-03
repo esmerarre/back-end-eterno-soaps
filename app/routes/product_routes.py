@@ -6,7 +6,7 @@ from app.models.category import Category
 from app.models.product_categories import association_table
 from app.schemas.product_schema import ProductRead, ProductCreate, ProductCategoryAssign, ProductCategoryAssignResponse
 from app.schemas.category_schema import CategoryRead, CategoryCreate
-from .route_utilities import validate_model
+from .route_utilities import validate_model, generate_signed_url
 
 router = APIRouter(tags=["Products"], prefix="/products")
 
@@ -16,6 +16,7 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
         name=product.name,
         description=product.description,
         ingredients=product.ingredients,
+        img_key=product.img_key
     )
     db.add(new_product)
     db.commit()
@@ -37,6 +38,7 @@ def update_product(product_id: int, updated_product: ProductCreate, db: Session 
     product.name = updated_product.name
     product.description = updated_product.description
     product.ingredients = updated_product.ingredients
+    product.img_key = updated_product.img_key
     db.commit()
     db.refresh(product)
     return product
