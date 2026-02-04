@@ -41,7 +41,16 @@ class ProductSummary(BaseModel):  # No category reference
     name: str
     description: str
     ingredients: List[str]
+    img_key: Optional[str]
     variants: List[ProductVariantRead] = []
+    
+    @computed_field
+    @property
+    def image_url(self) -> Optional[str]:
+        """Generate signed URL from S3 key"""
+        if self.img_key:
+            return generate_signed_url(self.img_key)
+        return None
 
     class Config:
         from_attributes = True
