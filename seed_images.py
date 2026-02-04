@@ -29,7 +29,7 @@ def seed_image_keys():
                 "product": "products/cactus-small.jpeg",  # small exists
                 "small": "products/cactus-small.jpeg",
             },
-            "Activated Charcoal and Turmeric": {
+            "Activated Charcoal": {
                 "product": "products/charcoal-small.jpeg",  # small exists
                 "small-round": "products/charcoal-small.jpeg",
                 "large-massage bar": "products/charcoal-large-mb.jpeg",

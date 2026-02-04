@@ -63,8 +63,8 @@ def seed_database():
                 "ingredients": ["Kojic Acid", "Turmeric", "Rice Powder"],
             },
             {
-                "name": "Activated Charcoal and Turmeric",
-                "description": "Charcoal and turmeric soap for a gentle detox.",
+                "name": "Activated Charcoal",
+                "description": "Charcoal soap for a gentle detox.",
                 "ingredients": ["Activated Charcoal", "Turmeric", "Essential Oils"],
             },
             {
@@ -205,8 +205,8 @@ def seed_database():
             ("Spirulina, Aloe and Chamomile", "Medium", "Flower", 8.00, 7),
             ("Kojic Acid", "Large", "Rectangle", 15.00, 12),
             ("Kojic Acid", "Medium", "Oval", 6.00, 6),
-            ("Activated Charcoal and Turmeric", "Large", "Massage Bar", 12.00, 7),
-            ("Activated Charcoal and Turmeric", "Small", "Round", 5.00, 3),
+            ("Activated Charcoal", "Large", "Massage Bar", 12.00, 7),
+            ("Activated Charcoal", "Small", "Round", 5.00, 3),
             ("Oats, Honey, and Turmeric", "Large", "Rectangle", 10.00, 3),
             ("Oats, Honey, and Turmeric", "Medium", "Bee Honeycomb", 8.00, 2),
             ("Rose and Aloe", "Medium", "Flower", 8.00, 7),
