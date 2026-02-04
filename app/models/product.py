@@ -1,6 +1,6 @@
 from __future__ import annotations
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, JSON
+from sqlalchemy import ForeignKey, JSON, String
 from .category import Category
 from .product_categories import association_table
 from .base import Base
@@ -16,6 +16,7 @@ class Product(Base):
     name: Mapped[str] = mapped_column(index=True)
     description: Mapped[str]
     ingredients: Mapped[list] = mapped_column(JSON)
+    img_key: Mapped[str | None] = mapped_column(String, nullable=True)
 
     # Relationships
     categories: Mapped[list["Category"]] = relationship(secondary=association_table, back_populates="products")

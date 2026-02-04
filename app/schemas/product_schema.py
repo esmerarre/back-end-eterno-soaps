@@ -1,12 +1,14 @@
 from __future__ import annotations
-from pydantic import BaseModel
-from typing import List
+from pydantic import BaseModel, computed_field
+from typing import List, Optional
 from app.schemas.product_variant_schema import ProductVariantRead
+from app.routes.route_utilities import generate_signed_url
 
 class ProductBase(BaseModel):
     name: str
     description: str
     ingredients: List[str]
+    img_key: Optional[str]
 
 class ProductCreate(ProductBase):
     pass
@@ -15,6 +17,14 @@ class ProductRead(ProductBase):
     id: int
     variants: List[ProductVariantRead] = []
     categories: List[CategoryRead] = []
+
+    @computed_field
+    @property
+    def image_url(self) -> Optional[str]:
+        """Generate signed URL from S3 key"""
+        if self.img_key:
+            return generate_signed_url(self.img_key)
+        return None
 
     class Config:
         from_attributes = True
