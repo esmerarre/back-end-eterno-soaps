@@ -17,10 +17,8 @@ def get_admin(username: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Admin not found")
     return admin
 
-
 @router.post("/login", response_model=AdminOut)
 def admin_login(admin: AdminCreate, db: Session = Depends(get_db)):
-    # Very simple login for now: just check username exists
     existing_admin = db.query(Admin).filter(Admin.username == admin.username).first()
     if not existing_admin:
         raise HTTPException(status_code=401, detail="Admin not found")
