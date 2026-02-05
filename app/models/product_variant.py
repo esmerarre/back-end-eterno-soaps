@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 class ProductVariant(Base):
     __tablename__ = "product_variants"
     id: Mapped[int] = mapped_column(primary_key=True)
-    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), index=True)
+    product_id: Mapped[int] = mapped_column(ForeignKey("products.id", ondelete="CASCADE"), index=True)
     size: Mapped[str] = mapped_column(index=True) 
     shape: Mapped[str | None] = mapped_column(String, nullable=True)
     img_key: Mapped[str | None] = mapped_column(String, nullable=True)

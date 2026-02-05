@@ -20,4 +20,4 @@ class Product(Base):
 
     # Relationships
     categories: Mapped[list["Category"]] = relationship(secondary=association_table, back_populates="products")
-    variants: Mapped[list["ProductVariant"]] = relationship(back_populates="product")
+    variants: Mapped[list["ProductVariant"]] = relationship(back_populates="product", cascade="all, delete-orphan", passive_deletes=True)
