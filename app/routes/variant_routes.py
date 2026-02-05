@@ -33,6 +33,22 @@ def decrease_variant_stock(
     db.refresh(variant)
     return variant
 
+@router.patch("/{variant_id}/stock-quantity", response_model=ProductVariantRead)
+def set_variant_stock_quantity(
+    variant_id: int,
+    stock_quantity: int,
+    db: Session = Depends(get_db),
+):
+    variant = validate_model(db, ProductVariant, variant_id)
+
+    if stock_quantity < 0:
+        raise HTTPException(status_code=400, detail="Stock quantity cannot be negative")
+
+    variant.stock_quantity = stock_quantity
+    db.commit()
+    db.refresh(variant)
+    return variant
+
 @router.post("/", status_code=201, response_model=ProductVariantRead)
 def create_variant(product_id: int, product_variant: ProductVariantCreate, db: Session = Depends(get_db)):
     validate_model(db, Product, product_id)
