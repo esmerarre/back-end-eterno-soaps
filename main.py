@@ -9,10 +9,6 @@ from app.routes.admin_routes import router as admin_router
 
 
 
-
-
-
-
 app = FastAPI()
 
 origins = [

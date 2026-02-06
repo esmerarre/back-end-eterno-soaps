@@ -23,16 +23,12 @@
 #         raise HTTPException(status_code=500, detail=str(e))
 
 # backend/app/routes/contact.py
-from fastapi import APIRouter, Request
-from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException
 from datetime import datetime
+from app.schemas.contact_schema import ContactForm
+from app.services.email_services import send_contact_email
 
 router = APIRouter()
-
-class ContactForm(BaseModel):
-    name: str
-    email: str
-    message: str
 
 @router.post("/contact")
 async def submit_contact(form: ContactForm):
@@ -44,4 +40,16 @@ async def submit_contact(form: ContactForm):
     print("Message:")
     print(form.message)
     print("-" * 32)
-    return {"message": "Form received!"}
+
+    try:
+        send_contact_email(
+            name=form.name,
+            email=form.email,
+            message=form.message
+        )
+    except Exception:
+        raise HTTPException(status_code=500, detail="Failed to send email")
+
+    return {"message": "Form received and email sent!"}
+
+
