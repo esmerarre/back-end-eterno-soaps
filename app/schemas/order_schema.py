@@ -3,16 +3,12 @@ from typing import List
 from datetime import datetime
 from app.schemas.order_details_schema import OrderDetailsRead
 
-
-
 class OrderBase(BaseModel):
     shipping_address: str
     order_email: str
 
-
 class OrderCreate(OrderBase):
     pass
-
 
 class OrderRead(OrderBase):
     id: int

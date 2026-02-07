@@ -2,7 +2,6 @@ from pydantic import BaseModel, computed_field
 from typing import Optional
 from app.routes.route_utilities import generate_signed_url
 
-
 class ProductVariantBase(BaseModel):
     size: str
     shape: Optional[str]
@@ -10,10 +9,8 @@ class ProductVariantBase(BaseModel):
     price: float
     stock_quantity: int
 
-
 class ProductVariantCreate(ProductVariantBase):
     pass
-
 
 class ProductVariantRead(ProductVariantBase):
     id: int

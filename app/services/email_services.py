@@ -19,8 +19,6 @@ def send_contact_email(name: str, email: str, message: str):
         """
     )
     
-
-
     try:
         sg = SendGridAPIClient(SENDGRID_API_KEY)
         sg.send(email_message)

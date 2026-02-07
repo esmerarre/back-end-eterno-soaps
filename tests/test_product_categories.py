@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 from app.models.product import Product
 
-
 def test_assign_categories_to_product(client: TestClient, db_session: Session, sample_category_data, sample_product_data):
     response = client.post("/products/1/categories", json={
         "category_ids": [1, 2]
@@ -20,7 +19,6 @@ def test_assign_categories_to_product(client: TestClient, db_session: Session, s
     assert product
     assert {category.name for category in product.categories} == {"Body", "Face"}
 
-
 def test_get_product_categories(client: TestClient, db_session: Session, sample_category_data, sample_product_data):
     client.post("/products/1/categories", json={
         "category_ids": [1, 2]
@@ -33,7 +31,6 @@ def test_get_product_categories(client: TestClient, db_session: Session, sample_
     assert len(response_body) == 2
     assert {category["name"] for category in response_body} == {"Body", "Face"}
 
-
 def test_delete_product_category(client: TestClient, db_session: Session, sample_category_data, sample_product_data):
     client.post("/products/1/categories", json={
         "category_ids": [1, 2]
@@ -45,7 +42,6 @@ def test_delete_product_category(client: TestClient, db_session: Session, sample
     assert response.status_code == 200
     assert response_body["id"] == 1
     assert {category["name"] for category in response_body["categories"]} == {"Face"}
-
 
 def test_assign_categories_product_not_found(client: TestClient, db_session: Session, sample_category_data):
     response = client.post("/products/999/categories", json={

@@ -1,5 +1,3 @@
-# app/schemas/__init__.py
-
 from .category_schema import CategoryBase, CategoryCreate, CategoryRead
 from .product_schema import ProductBase, ProductCreate, ProductRead
 from .product_variant_schema import ProductVariantBase, ProductVariantCreate, ProductVariantRead

@@ -1,6 +1,6 @@
 from __future__ import annotations
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, JSON, String
+from sqlalchemy import JSON, String
 from .category import Category
 from .product_categories import association_table
 from .base import Base

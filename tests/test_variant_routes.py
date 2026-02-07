@@ -57,7 +57,6 @@ def test_get_all_variants_no_variants(client: TestClient, db_session: Session, s
     assert response.status_code == 200
     assert response_body == []
 
-
 def test_get_all_variants(client: TestClient, db_session: Session, sample_variant_data):
     response = client.get("/products/1/variants/")
     response_body = response.json()
@@ -111,7 +110,6 @@ def test_get_variant_by_id_invalid_id(client: TestClient, db_session: Session, s
 
     # Assert
     assert response.status_code == 422
-
 
 def test_update_variant_not_found(client: TestClient, db_session: Session, sample_variant_data):
     # Act

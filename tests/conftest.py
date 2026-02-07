@@ -12,7 +12,6 @@ import os
 
 TEST_DATABASE_URI = os.getenv("SQLALCHEMY_TEST_DATABASE_URI")
 
-# Safety check so you don’t nuke prod/dev by accident
 assert "test" in TEST_DATABASE_URI.lower()
 
 @pytest.fixture(scope="session")

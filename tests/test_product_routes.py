@@ -47,7 +47,6 @@ def test_get_all_products_no_products(client: TestClient):
     assert response.status_code == 200
     assert response_body == []
 
-
 def test_get_all_products(client: TestClient, db_session: Session, sample_product_data):
     response = client.get("/products/")
     response_body = response.json()
@@ -89,11 +88,9 @@ def test_get_product_by_id_found(client: TestClient, db_session: Session, sample
 def test_get_product_by_id_invalid_id(client: TestClient, db_session: Session, sample_product_data):
     # Act
     response = client.get("/products/abc")
-    response_body = response.json()
 
     # FastAPI automatically returns 422 for invalid path parameter types and specifies input type
     assert response.status_code == 422
-
 
 def test_update_product_not_found(client: TestClient, db_session: Session, sample_product_data):
     # Act
@@ -104,8 +101,6 @@ def test_update_product_not_found(client: TestClient, db_session: Session, sampl
         "img_key": None
     })
     response_body = response.json()
-
-    # FastAPI automatically returns 422 for invalid path parameter types and specifies input type
     assert response.status_code == 404
     assert response_body == {
         "detail": "Product 999 not found"
@@ -178,57 +173,3 @@ def test_delete_product_invalid_id(client: TestClient, db_session: Session, samp
 
     # Assert
     assert response.status_code == 422
-
-# def test_patch_product_found(client: TestClient, db_session: Session, sample_product_data):
-#     # Act - Note: PATCH not implemented in routes, test may need adjustment
-#     response = client.patch("/products/3", json={
-#         "description": "Updated description via PATCH"
-#     })
-    
-#     # If PATCH is not implemented, expect 405 Method Not Allowed
-#     if response.status_code == 405:
-#         return  # Skip test if PATCH not implemented
-    
-#     response_body = response.json()
-
-#     # Assert
-#     assert response.status_code == 200
-#     assert response_body["id"] == 3
-#     assert response_body["description"] == "Updated description via PATCH"
-
-# def test_patch_product_not_found(client: TestClient, db_session: Session, sample_product_data):
-#     # Act
-#     response = client.patch("/products/999", json={
-#         "description": "Updated"
-#     })
-    
-#     # If PATCH is not implemented, expect 405 Method Not Allowed
-#     if response.status_code == 405:
-#         return  # Skip test if PATCH not implemented
-        
-#     response_body = response.json()
-
-#     # Assert
-#     assert response.status_code == 404
-#     assert response_body == {
-#         "detail": "Product 999 not found"
-#     }
-
-# def test_patch_product_invalid_id(client: TestClient, db_session: Session, sample_product_data):
-#     # Act
-#     response = client.patch("/products/xyz", json={
-#         "description": "Test"
-#     })
-    
-#     # If PATCH is not implemented, expect 405 Method Not Allowed
-#     if response.status_code == 405:
-#         return  # Skip test if PATCH not implemented
-        
-#     response_body = response.json()
-
-#     # Assert
-#     assert response.status_code == 400
-#     assert response_body == {
-#         "detail": "Invalid data"
-#     }
-
