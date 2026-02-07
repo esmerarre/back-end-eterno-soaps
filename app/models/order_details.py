@@ -1,6 +1,6 @@
 from __future__ import annotations
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, Float, DateTime
+from sqlalchemy import ForeignKey
 from .base import Base
 from typing import TYPE_CHECKING
 from datetime import datetime

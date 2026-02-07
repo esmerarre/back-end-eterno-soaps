@@ -55,7 +55,6 @@ class ProductSummary(BaseModel):  # No category reference
     class Config:
         from_attributes = True
 
-
 ## Resolve circular imports, do not move import to top ##
 from app.schemas.category_schema import CategoryRead
 ProductRead.model_rebuild()

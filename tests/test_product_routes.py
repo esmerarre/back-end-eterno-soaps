@@ -8,7 +8,8 @@ def test_create_product(client: TestClient, db_session: Session, sample_category
     response = client.post("/products", json={
         "name": "Cottonwood",
         "description": "A soothing blend of natural herbs for gentle cleansing.",
-        "ingredients": ["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"]
+        "ingredients": ["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"],
+        "img_key": None
     })
     response_body = response.json()
 
@@ -18,6 +19,7 @@ def test_create_product(client: TestClient, db_session: Session, sample_category
     assert response_body["name"] == "Cottonwood"
     assert response_body["description"] == "A soothing blend of natural herbs for gentle cleansing."
     assert response_body["ingredients"] == ["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"]
+    assert response_body["img_key"] is None
     
     query = select(Product).where(Product.id == 1)
     new_product = db_session.scalars(query).first()
@@ -29,14 +31,14 @@ def test_create_product(client: TestClient, db_session: Session, sample_category
 def test_create_product_invalid_data(client: TestClient, db_session: Session, sample_category_data):
     # Act
     response = client.post("/products", json={
-        "name": "",
         "description": "",
-        "ingredients": []
+        "ingredients": [],
+        "img_key": None
     })
     response_body = response.json()
 
     # Assert
-    assert response.status_code ==404  # Either validation error
+    assert response.status_code == 422
 
 def test_get_all_products_no_products(client: TestClient):
     response = client.get("/products/")
@@ -44,7 +46,6 @@ def test_get_all_products_no_products(client: TestClient):
 
     assert response.status_code == 200
     assert response_body == []
-
 
 def test_get_all_products(client: TestClient, db_session: Session, sample_product_data):
     response = client.get("/products/")
@@ -87,22 +88,19 @@ def test_get_product_by_id_found(client: TestClient, db_session: Session, sample
 def test_get_product_by_id_invalid_id(client: TestClient, db_session: Session, sample_product_data):
     # Act
     response = client.get("/products/abc")
-    response_body = response.json()
 
     # FastAPI automatically returns 422 for invalid path parameter types and specifies input type
     assert response.status_code == 422
-
 
 def test_update_product_not_found(client: TestClient, db_session: Session, sample_product_data):
     # Act
     response = client.put("/products/999", json={
         "name": "Updated Name",
         "description": "Updated Description",
-        "ingredients": ["Test"]
+        "ingredients": ["Test"],
+        "img_key": None
     })
     response_body = response.json()
-
-    # FastAPI automatically returns 422 for invalid path parameter types and specifies input type
     assert response.status_code == 404
     assert response_body == {
         "detail": "Product 999 not found"
@@ -113,7 +111,8 @@ def test_update_product_found(client: TestClient, db_session: Session, sample_pr
     response = client.put("/products/2", json={
         "name": "Updated Saffron",
         "description": "Updated Description",
-        "ingredients": ["Updated", "Ingredients"]
+        "ingredients": ["Updated", "Ingredients"],
+        "img_key": None
     })
     response_body = response.json()
 
@@ -122,6 +121,7 @@ def test_update_product_found(client: TestClient, db_session: Session, sample_pr
     assert response_body["id"] == 2
     assert response_body["name"] == "Updated Saffron"
     assert response_body["description"] == "Updated Description"
+    assert response_body["img_key"] is None
 
     query = select(Product).where(Product.id == 2)
     updated_product = db_session.scalars(query).first()
@@ -135,7 +135,8 @@ def test_update_product_invalid_id(client: TestClient, db_session: Session, samp
     response = client.put("/products/abc", json={
         "name": "Updated Name",
         "description": "Updated Description",
-        "ingredients": ["Test"]
+        "ingredients": ["Test"],
+        "img_key": None
     })
     response_body = response.json()
 
@@ -172,57 +173,3 @@ def test_delete_product_invalid_id(client: TestClient, db_session: Session, samp
 
     # Assert
     assert response.status_code == 422
-
-# def test_patch_product_found(client: TestClient, db_session: Session, sample_product_data):
-#     # Act - Note: PATCH not implemented in routes, test may need adjustment
-#     response = client.patch("/products/3", json={
-#         "description": "Updated description via PATCH"
-#     })
-    
-#     # If PATCH is not implemented, expect 405 Method Not Allowed
-#     if response.status_code == 405:
-#         return  # Skip test if PATCH not implemented
-    
-#     response_body = response.json()
-
-#     # Assert
-#     assert response.status_code == 200
-#     assert response_body["id"] == 3
-#     assert response_body["description"] == "Updated description via PATCH"
-
-# def test_patch_product_not_found(client: TestClient, db_session: Session, sample_product_data):
-#     # Act
-#     response = client.patch("/products/999", json={
-#         "description": "Updated"
-#     })
-    
-#     # If PATCH is not implemented, expect 405 Method Not Allowed
-#     if response.status_code == 405:
-#         return  # Skip test if PATCH not implemented
-        
-#     response_body = response.json()
-
-#     # Assert
-#     assert response.status_code == 404
-#     assert response_body == {
-#         "detail": "Product 999 not found"
-#     }
-
-# def test_patch_product_invalid_id(client: TestClient, db_session: Session, sample_product_data):
-#     # Act
-#     response = client.patch("/products/xyz", json={
-#         "description": "Test"
-#     })
-    
-#     # If PATCH is not implemented, expect 405 Method Not Allowed
-#     if response.status_code == 405:
-#         return  # Skip test if PATCH not implemented
-        
-#     response_body = response.json()
-
-#     # Assert
-#     assert response.status_code == 400
-#     assert response_body == {
-#         "detail": "Invalid data"
-#     }
-

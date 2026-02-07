@@ -9,7 +9,6 @@ class CategoryBase(BaseModel):
 class CategoryCreate(CategoryBase):
     pass
 
-
 class CategoryRead(CategoryBase):
     id: int
 

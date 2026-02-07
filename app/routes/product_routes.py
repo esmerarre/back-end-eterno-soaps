@@ -1,12 +1,11 @@
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends
 from app.db import get_db
 from sqlalchemy.orm import Session
 from app.models.product import Product
 from app.models.category import Category
-from app.models.product_categories import association_table
 from app.schemas.product_schema import ProductRead, ProductCreate, ProductCategoryAssign, ProductCategoryAssignResponse
-from app.schemas.category_schema import CategoryRead, CategoryCreate
-from .route_utilities import validate_model, generate_signed_url
+from app.schemas.category_schema import CategoryRead
+from .route_utilities import validate_model
 
 router = APIRouter(tags=["Products"], prefix="/products")
 

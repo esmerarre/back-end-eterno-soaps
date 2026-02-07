@@ -7,20 +7,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes.checkout_routes import router as checkout_router
 from app.routes.admin_routes import router as admin_router
 
-
-
 app = FastAPI()
 
 origins = [
     "http://localhost:5173",   # Vite frontend
     "http://127.0.0.1:5173",
     "https://front-end-eterno-soaps.onrender.com"
-
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # your frontend URL
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],  # allow POST, GET, OPTIONS, etc.
     allow_headers=["*"],
