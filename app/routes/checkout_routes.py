@@ -45,5 +45,5 @@ def create_checkout_session(data: CheckoutRequest):
             cancel_url=f"{FRONTEND_URL_PROD}/cancel",
         )
         return {"url": session.url}
-    except Exception as e:``
+    except Exception as e:
         return {"error": str(e)}
