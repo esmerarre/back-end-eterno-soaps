@@ -44,6 +44,7 @@ def create_checkout_session(data: CheckoutRequest):
             success_url=f"{FRONTEND_URL_PROD}/success",
             cancel_url=f"{FRONTEND_URL_PROD}/cancel",
         )
+        print("Stripe checkout session created successfully")
         return {"url": session.url}
     except Exception as e:
         return {"error": str(e)}
