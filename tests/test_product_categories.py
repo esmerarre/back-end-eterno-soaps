@@ -1,85 +1,60 @@
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
-from app.models.product import Product
-from app.models.category import Category
 from sqlalchemy import select
+from app.models.product import Product
 
-def test_create_product_with_category(client: TestClient, db_session: Session, sample_category_data):
-    # Act
-    response = client.post("/products", json={
-        "name": "Cottonwood",
-        "description": "A soothing blend of natural herbs for gentle cleansing.",
-        "ingredients": ["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"]
+
+def test_assign_categories_to_product(client: TestClient, db_session: Session, sample_category_data, sample_product_data):
+    response = client.post("/products/1/categories", json={
+        "category_ids": [1, 2]
     })
     response_body = response.json()
 
-    # Assert
-    assert response.status_code == 201
-    assert response_body["id"] == 1
-    assert response_body["name"] == "Cottonwood"
-    
+    assert response.status_code == 200
+    assert response_body["product_id"] == 1
+    assert set(response_body["added_categories"]) == {"Body", "Face"}
+
     query = select(Product).where(Product.id == 1)
-    new_product = db_session.scalars(query).first()
+    product = db_session.scalars(query).first()
 
-    assert new_product
-    assert new_product.name == "Cottonwood"
+    assert product
+    assert {category.name for category in product.categories} == {"Body", "Face"}
 
 
-### NEEDS REVIEW - need many-to-many relationship implemented first ###
-#@pytest.mark.skip(reason="No way to test this feature yet")
-def test_get_products_for_specific_category_no_category(client: TestClient, db_session: Session, sample_product_data):
-    # Act
-    response = client.get("/categories/999/products") # Non-existent category
-    response_body = response.get_json()
+def test_get_product_categories(client: TestClient, db_session: Session, sample_category_data, sample_product_data):
+    client.post("/products/1/categories", json={
+        "category_ids": [1, 2]
+    })
 
-    # Assert
+    response = client.get("/products/1/categories")
+    response_body = response.json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 2
+    assert {category["name"] for category in response_body} == {"Body", "Face"}
+
+
+def test_delete_product_category(client: TestClient, db_session: Session, sample_category_data, sample_product_data):
+    client.post("/products/1/categories", json={
+        "category_ids": [1, 2]
+    })
+
+    response = client.delete("/products/1/categories/1")
+    response_body = response.json()
+
+    assert response.status_code == 200
+    assert response_body["id"] == 1
+    assert {category["name"] for category in response_body["categories"]} == {"Face"}
+
+
+def test_assign_categories_product_not_found(client: TestClient, db_session: Session, sample_category_data):
+    response = client.post("/products/999/categories", json={
+        "category_ids": [1]
+    })
+    response_body = response.json()
+
     assert response.status_code == 404
-    assert response_body == {"message": "Category 1 not found"}
-
-def test_get_products_for_specific_category_no_products(client: TestClient, db_session: Session, sample_category_data):
-    # Act
-    response = client.get("/categories/3/products")  # Category 3 = "None"
-    
-    # If this endpoint is not implemented, skip test
-    if response.status_code == 404:
-        return
-        
-    response_body = response.json()
-
-    # Assert
-    assert response.status_code == 200
-    assert "products" in response_body or isinstance(response_body, list)
-    # Should have empty products list
-    if isinstance(response_body, list):
-        assert len(response_body) == 0
-    else:
-        assert len(response_body.get("products", [])) == 0
-
-def test_get_products_for_specific_category_with_products(client: TestClient, db_session: Session, sample_category_data, sample_product_data):
-    # sample_product_data already assigns products to categories
-    # Product 1 (Cottonwood) -> Category 1
-    # Product 2 (Saffron) -> Category 2
-    # Product 3 (Aloe Vera) -> Category 2
-
-    # Act - Get products in category 2 (Face)
-    response = client.get("/categories/2/products")
-    
-    # If this endpoint is not implemented, skip test
-    if response.status_code == 404:
-        return
-        
-    response_body = response.json()
-
-    # Assert
-    assert response.status_code == 200
-    
-    # Handle different possible response formats
-    if isinstance(response_body, list):
-        products = response_body
-    else:
-        products = response_body.get("products", [])
-    
-    assert len(products) == 2
-    assert products[0]["name"] == "Saffron"
-    assert products[1]["name"] == "Aloe Vera"
+    assert response_body == {
+        "detail": "Product 999 not found"
+    }
 

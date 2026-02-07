@@ -10,19 +10,23 @@ import pytest
 
 def test_create_category(client: TestClient, db_session: Session):
     # Act
-    response = client.post("/categories", json={
-        "category_ids": "Body",
-        "description": "Body soaps"
-    })
+    response = client.post("/categories", json=[
+        {
+            "name": "Body",
+            "description": "Body soaps"
+        }
+    ])
     response_body = response.json()
 
     # Assert
     assert response.status_code == 201
-    assert response_body == {
-        "id": 1,
-        "name": "Body",
-        "description": "Body soaps"
-    }
+    assert response_body == [
+        {
+            "id": 1,
+            "name": "Body",
+            "description": "Body soaps"
+        }
+    ]
     
     query = select(Category).where(Category.id == 1)
     new_category = db_session.scalars(query).first()
@@ -84,7 +88,8 @@ def test_get_category_by_id_found(client: TestClient, db_session: Session, sampl
     assert response_body == {
         "id": 2,
         "name": "Face",
-        "description": "Facial soaps"
+        "description": "Facial soaps",
+        "products": []
     }
 
 def test_get_category_by_id_invalid_id(client: TestClient, db_session: Session, sample_category_data):

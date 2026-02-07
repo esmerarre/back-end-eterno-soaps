@@ -84,17 +84,20 @@ def sample_product_data(db_session: Session, sample_category_data):
         Product(
             name="Cottonwood",
             description="A soothing blend of natural herbs for gentle cleansing.",
-            ingredients=["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"]
+            ingredients=["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"],
+            img_key=None
         ),
         Product(
             name="Saffron",
             description="Luxurious saffron and oats soap for radiant skin.",
-            ingredients=["Saffron", "Oats", "Tapioca", "Vitamin E", "Essential oils"]
+            ingredients=["Saffron", "Oats", "Tapioca", "Vitamin E", "Essential oils"],
+            img_key=None
         ),
         Product(
             name="Aloe Vera",
             description="Relaxing lavender and aloe blend for sensitive skin.",
-            ingredients=["Lavender", "Turmeric", "Aloe Vera", "Calendula"]
+            ingredients=["Lavender", "Turmeric", "Aloe Vera", "Calendula"],
+            img_key=None
         )
     ]
 
@@ -129,7 +132,7 @@ def sample_variant_data(db_session: Session, sample_product_data):
             product_id=1,
             size="Small",
             shape="Round",
-            img_url="https://example.com/images/cottonwood-small.jpg",
+            img_key=None,
             price=8.99,
             stock_quantity=100
         ),
@@ -137,7 +140,7 @@ def sample_variant_data(db_session: Session, sample_product_data):
             product_id=1,
             size="Large",
             shape="Round",
-            img_url="https://example.com/images/cottonwood-large.jpg",
+            img_key=None,
             price=12.99,
             stock_quantity=50
         ),
@@ -145,7 +148,7 @@ def sample_variant_data(db_session: Session, sample_product_data):
             product_id=2,
             size="Medium",
             shape="Square",
-            img_url="https://example.com/images/saffron-medium.jpg",
+            img_key=None,
             price=10.99,
             stock_quantity=75
         )

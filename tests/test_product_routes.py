@@ -8,7 +8,8 @@ def test_create_product(client: TestClient, db_session: Session, sample_category
     response = client.post("/products", json={
         "name": "Cottonwood",
         "description": "A soothing blend of natural herbs for gentle cleansing.",
-        "ingredients": ["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"]
+        "ingredients": ["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"],
+        "img_key": None
     })
     response_body = response.json()
 
@@ -18,6 +19,7 @@ def test_create_product(client: TestClient, db_session: Session, sample_category
     assert response_body["name"] == "Cottonwood"
     assert response_body["description"] == "A soothing blend of natural herbs for gentle cleansing."
     assert response_body["ingredients"] == ["Cottonwood Leaves", "Clove", "Cinnamon", "Bay Leaves", "Rosemary"]
+    assert response_body["img_key"] is None
     
     query = select(Product).where(Product.id == 1)
     new_product = db_session.scalars(query).first()
@@ -29,14 +31,14 @@ def test_create_product(client: TestClient, db_session: Session, sample_category
 def test_create_product_invalid_data(client: TestClient, db_session: Session, sample_category_data):
     # Act
     response = client.post("/products", json={
-        "name": "",
         "description": "",
-        "ingredients": []
+        "ingredients": [],
+        "img_key": None
     })
     response_body = response.json()
 
     # Assert
-    assert response.status_code ==404  # Either validation error
+    assert response.status_code == 422
 
 def test_get_all_products_no_products(client: TestClient):
     response = client.get("/products/")
@@ -98,7 +100,8 @@ def test_update_product_not_found(client: TestClient, db_session: Session, sampl
     response = client.put("/products/999", json={
         "name": "Updated Name",
         "description": "Updated Description",
-        "ingredients": ["Test"]
+        "ingredients": ["Test"],
+        "img_key": None
     })
     response_body = response.json()
 
@@ -113,7 +116,8 @@ def test_update_product_found(client: TestClient, db_session: Session, sample_pr
     response = client.put("/products/2", json={
         "name": "Updated Saffron",
         "description": "Updated Description",
-        "ingredients": ["Updated", "Ingredients"]
+        "ingredients": ["Updated", "Ingredients"],
+        "img_key": None
     })
     response_body = response.json()
 
@@ -122,6 +126,7 @@ def test_update_product_found(client: TestClient, db_session: Session, sample_pr
     assert response_body["id"] == 2
     assert response_body["name"] == "Updated Saffron"
     assert response_body["description"] == "Updated Description"
+    assert response_body["img_key"] is None
 
     query = select(Product).where(Product.id == 2)
     updated_product = db_session.scalars(query).first()
@@ -135,7 +140,8 @@ def test_update_product_invalid_id(client: TestClient, db_session: Session, samp
     response = client.put("/products/abc", json={
         "name": "Updated Name",
         "description": "Updated Description",
-        "ingredients": ["Test"]
+        "ingredients": ["Test"],
+        "img_key": None
     })
     response_body = response.json()
 
