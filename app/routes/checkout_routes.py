@@ -8,6 +8,9 @@ load_dotenv()
 # Stripe secret key (use environment variable)
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
+FRONTEND_URL_PROD = os.getenv("FRONTEND_URL_PROD")
+FRONTEND_URL_LOCAL = os.getenv("FRONTEND_URL_LOCAL")
+
 router = APIRouter(tags=["Checkout"], prefix="/api")
 
 # Pydantic model for items
@@ -38,9 +41,9 @@ def create_checkout_session(data: CheckoutRequest):
                 for item in data.items
             ],
             mode="payment",
-            success_url="http://localhost:5173/success",
-            cancel_url="http://localhost:5173/cancel",
+            success_url=f"{FRONTEND_URL_PROD}/success",
+            cancel_url=f"{FRONTEND_URL_PROD}/cancel",
         )
         return {"url": session.url}
-    except Exception as e:
+    except Exception as e:``
         return {"error": str(e)}
