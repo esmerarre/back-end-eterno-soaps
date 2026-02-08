@@ -29,4 +29,3 @@ app.include_router(variant_router)
 app.include_router(contact_router)
 app.include_router(checkout_router)
 app.include_router(admin_router)
-
