@@ -26,6 +26,17 @@ Create a .env file in the project root with the following variables:
 | AWS_REGION | Yes (S3 images) | AWS region | us-west-2 |
 | AWS_BUCKET_NAME | Yes (S3 images) | S3 bucket name for product images | eterno-soaps-assets |
 
+## AWS S3 Bucket Setup
+This application uses AWS S3 to store and serve product images. To set up your S3 bucket:
+
+1. **Create an S3 bucket** in your AWS console with a unique name (e.g., `eterno-soaps-assets`)
+ 
+2. **Create IAM user credentials**:
+   - Create an IAM user with programmatic access
+   - Attach a policy with `s3:PutObject`, `s3:GetObject`, and `s3:DeleteObject` permissions for your bucket
+   - Save the Access Key ID and Secret Access Key to your `.env` file
+3. **Set the bucket region** in your `.env` file to match your S3 bucket's region
+
 ## Setup
 1) Create and activate a virtual environment:
 ```
