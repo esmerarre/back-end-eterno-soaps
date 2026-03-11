@@ -16,6 +16,8 @@ Create a .env file in the project root with the following variables:
 | --- | --- | --- | --- |
 | SQLALCHEMY_DATABASE_URI | Yes | Postgres connection string for dev/prod | postgresql+psycopg2://user:password@localhost:5432/eterno_soaps_api_development |
 | SQLALCHEMY_TEST_DATABASE_URI | Yes (tests) | Postgres connection string for tests | postgresql+psycopg2://user:password@localhost:5432/eterno_soaps_api_test |
+| ADMIN_JWT_SECRET | Yes (auth) | Secret key used to sign admin access tokens | use-a-long-random-secret |
+| ADMIN_ACCESS_TOKEN_EXPIRE_MINUTES | Optional (auth) | Admin token expiration time in minutes | 60 |
 | STRIPE_SECRET_KEY | Yes (checkout) | Stripe secret key |  |
 | FRONTEND_URL | Yes (checkout) | Frontend base URL for Stripe redirects | http://localhost:5173 |
 | SENDGRID_API_KEY | Yes (contact form) | SendGrid API key | SG... |
@@ -82,6 +84,12 @@ uvicorn main:app --reload
 ```
 
 The API will be available at http://localhost:8000 with docs at http://localhost:8000/docs
+
+## Admin authentication (simple + secure)
+
+- `POST /admins/` now requires `username` and `password` (password is stored hashed, never plain text).
+- `POST /admins/login` returns a bearer token.
+- Protected admin endpoints (`GET /admins/`, `GET /admins/{username}`) require `Authorization: Bearer <token>`.
 
 ## Run tests
 ```
