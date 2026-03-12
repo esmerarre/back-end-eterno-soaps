@@ -29,6 +29,20 @@ s3 = boto3.client(
     aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
 )
 
+
+def get_s3_bucket_name() -> str:
+    """Return configured S3 bucket name.
+
+    Prefers S3_BUCKET_NAME and falls back to AWS_BUCKET_NAME for backward compatibility.
+    """
+    bucket_name = os.getenv("S3_BUCKET_NAME") or os.getenv("AWS_BUCKET_NAME")
+    if not bucket_name:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="S3_BUCKET_NAME environment variable not set",
+        )
+    return bucket_name
+
 def generate_signed_url(key: str, expires_in: int = 3600) -> str:
     """Generate a signed URL for an S3 object.
     
@@ -42,13 +56,7 @@ def generate_signed_url(key: str, expires_in: int = 3600) -> str:
     Raises:
         HTTPException: If URL generation fails
     """
-    bucket_name = os.getenv("AWS_BUCKET_NAME")
-    
-    if not bucket_name:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="AWS_BUCKET_NAME environment variable not set"
-        )
+    bucket_name = get_s3_bucket_name()
     
     if not key:
         return None
@@ -77,6 +85,34 @@ def generate_signed_url(key: str, expires_in: int = 3600) -> str:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to generate signed URL: {str(e)}"
+        )
+
+
+def generate_presigned_put_url(key: str, content_type: str, expires_in: int = 300) -> str:
+    """Generate a presigned PUT URL for direct browser uploads to S3."""
+    bucket_name = get_s3_bucket_name()
+
+    try:
+        return s3.generate_presigned_url(
+            ClientMethod="put_object",
+            Params={
+                "Bucket": bucket_name,
+                "Key": key,
+                "ContentType": content_type,
+            },
+            ExpiresIn=expires_in,
+        )
+    except ClientError as e:
+        error_code = e.response.get("Error", {}).get("Code", "Unknown")
+        error_msg = e.response.get("Error", {}).get("Message", str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate upload URL: {error_code} - {error_msg}",
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate upload URL: {str(e)}",
         )
 
 

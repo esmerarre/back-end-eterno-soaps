@@ -6,8 +6,9 @@ from jwt.exceptions import InvalidTokenError
 from pwdlib import PasswordHash
 
 
-# Secret used to sign JWTs. Set this in .env for real deployments.
-SECRET_KEY = os.getenv("ADMIN_JWT_SECRET", "change-me-in-production")
+SECRET_KEY = os.getenv("ADMIN_JWT_SECRET")
+if not SECRET_KEY:
+    raise RuntimeError("ADMIN_JWT_SECRET is not set")
 # HMAC-SHA256 signing algorithm.
 ALGORITHM = "HS256"
 # Default token lifetime (minutes).
