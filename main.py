@@ -6,6 +6,8 @@ from app.routes.contact import router as contact_router
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes.checkout_routes import router as checkout_router
 from app.routes.admin_routes import router as admin_router
+from app.routes.upload_routes import router as upload_router
+from app.routes.image_routes import router as image_router
 
 app = FastAPI()
 
@@ -29,3 +31,5 @@ app.include_router(variant_router)
 app.include_router(contact_router)
 app.include_router(checkout_router)
 app.include_router(admin_router)
+app.include_router(upload_router)
+app.include_router(image_router)

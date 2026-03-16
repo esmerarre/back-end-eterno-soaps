@@ -7,3 +7,6 @@ class Admin(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(String, unique=True, index=True)
+    # Store only the password hash (never the raw password).
+    # This is what gets checked at login.
+    hashed_password: Mapped[str] = mapped_column(String, nullable=False)
