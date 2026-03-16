@@ -116,4 +116,40 @@ def generate_presigned_put_url(key: str, content_type: str, expires_in: int = 30
         )
 
 
+def list_s3_object_keys(prefix: str | None = None, limit: int = 100) -> list[str]:
+    """List object keys in the configured S3 bucket.
+
+    Uses ListObjectsV2 and handles pagination until `limit` keys are collected.
+    """
+    bucket_name = get_s3_bucket_name()
+    keys: list[str] = []
+    if limit <= 0:
+        return keys
+
+    kwargs = {"Bucket": bucket_name}
+    if prefix:
+        kwargs["Prefix"] = prefix
+
+    try:
+        while True:
+            resp = s3.list_objects_v2(**kwargs)
+            contents = resp.get("Contents") or []
+            for obj in contents:
+                keys.append(obj.get("Key"))
+                if len(keys) >= limit:
+                    return keys[:limit]
+
+            # Pagination
+            if resp.get("IsTruncated"):
+                kwargs["ContinuationToken"] = resp.get("NextContinuationToken")
+            else:
+                break
+        return keys
+    except ClientError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to list S3 objects: {e.response.get('Error', {}).get('Message', str(e))}",
+        )
+
+
 
