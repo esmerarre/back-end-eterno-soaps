@@ -14,8 +14,11 @@ app = FastAPI()
 origins = [
     "http://localhost:5173",   # Vite frontend
     "http://127.0.0.1:5173",
-    "https://front-end-eterno-soaps.onrender.com"
+    "https://front-end-eterno-soaps.onrender.com",
+    "https://eternosoaps.com",
+    "https://www.eternosoaps.com",
 ]
+
 
 app.add_middleware(
     CORSMiddleware,
