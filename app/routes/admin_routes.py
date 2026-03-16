@@ -78,7 +78,12 @@ def admin_login(admin: AdminLogin, db: Session = Depends(get_db)):
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.post("/", response_model=AdminOut)
-def create_admin(admin: AdminCreate, db: Session = Depends(get_db)):
+def create_admin(
+    admin: AdminCreate,
+    db: Session = Depends(get_db),
+    # Protect creation so only existing admins can create new admins.
+    _: Admin = Depends(get_current_admin),
+):
     # Avoid duplicate usernames.
     existing_admin = db.query(Admin).filter(Admin.username == admin.username).first()
     if existing_admin:
@@ -93,5 +98,6 @@ def create_admin(admin: AdminCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_admin)
     return new_admin
+
 
 
